@@ -3,8 +3,8 @@ import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-    console.log(process.env.CLIENT_URL);
     const app = await NestFactory.create(AppModule);
+    console.log(process.env.CLIENT_URL);
     app.enableCors({
         origin: process.env.CLIENT_URL,
         credentials: true,
