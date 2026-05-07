@@ -18,6 +18,7 @@ export class AuthController {
         @Body('password') password: string,
         @Res({ passthrough: true }) res: Response,
     ) {
+        console.log('LOGIN HIT');
         const credentials = await this.userCredentialsService.findAllByPassword(password);
         
         if (credentials.length === 0) throw new NotFoundException();
