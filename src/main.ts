@@ -6,7 +6,7 @@ async function bootstrap() {
     console.log(process.env.JWT_SECRET);
     const app = await NestFactory.create(AppModule);
     app.enableCors({
-        origin: 'http://localhost:5173',
+        origin: process.env.CLIENT_URL,
         credentials: true,
     });
     app.use(cookieParser());
