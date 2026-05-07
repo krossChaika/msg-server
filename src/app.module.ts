@@ -33,7 +33,7 @@ import { ChatMemberModule } from './chat-member/chat-member.module';
                 rejectUnauthorized: false,
             },
             username: 'avnadmin',
-            password: 'AVNS_qcBjQmGIQC4WO4C3r1v',
+            password: process.env.DB_PWD,
             database: 'defaultdb',
             autoLoadEntities: true,
             entities: [ChatMember],
