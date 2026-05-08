@@ -20,7 +20,7 @@ import { UserService } from '../user/user.service';
 import { CreateChatDto } from './create-chat.dto';
 import { CreateChannelDto } from '../channel/create-channel.dto';
 
-@WebSocketGateway(Number(process.env.PORT ?? 3000), {
+@WebSocketGateway(Number(process.env.WS_PORT ?? 3002), {
     cors: {
         origin: process.env.CLIENT_URL,
         credentials: true,
