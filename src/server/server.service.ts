@@ -31,7 +31,9 @@ export class ServerService {
             joinedAt: new Date(),
         });
         
-        return { server, membership };
+        server.members = [membership];
+        
+        return { server };
     }
     
     public async find(options: FindOneOptions<Server>) {

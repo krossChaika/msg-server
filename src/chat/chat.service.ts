@@ -152,12 +152,16 @@ export class ChatService {
             throw new BadRequestException('Invalid server name length.');
         }
         
+        const user = await this.userService.findOne({ where: { id: ownerId } });
+        if (!user) throw new UnauthorizedException();
+        
         const { server } = await this.serverService.create({ ownerId, name });
         const channel = await this.channelService.create({
             name: 'general',
             serverId: server.id,
         });
         server.channels = [channel];
+        server.members[0].user = user;
         
         return server;
     }

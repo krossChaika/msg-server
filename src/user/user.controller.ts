@@ -3,13 +3,13 @@ import {
     Get,
     Post,
     Body,
-    Patch,
     Param,
-    Delete, NotFoundException,
+    NotFoundException, Req, ForbiddenException, UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import type { Request } from 'express';
+import { AuthGuard } from '../guards/auth-guard';
 
 @Controller('user')
 export class UserController {
@@ -21,12 +21,20 @@ export class UserController {
         return await this.userService.create(createUserDto);
     }
     
+    @Get('/me')
+    @UseGuards(AuthGuard)
+    async findMe(@Req() req: Request) {
+        if (!req.headers.authorization) return new ForbiddenException();
+        
+        return this.userService.findMe(req.headers.authorization);
+    }
+    
     @Get()
     async findAll() {
         return await this.userService.findAll();
     }
     
-    @Get(':id')
+    @Get('/id/:id')
     async findOne(@Param('id') id: string) {
         let user = await this.userService.findOne({
             where: { id: id },
@@ -35,15 +43,5 @@ export class UserController {
             throw new NotFoundException('User not found');
         }
         return user;
-    }
-    
-    @Patch(':id')
-    update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-        return this.userService.update(id, updateUserDto);
-    }
-    
-    @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.userService.remove(id);
     }
 }

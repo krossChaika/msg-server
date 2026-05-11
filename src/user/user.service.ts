@@ -11,11 +11,41 @@ export class UserService {
     private readonly userRepository: Repository<User>;
     
     async create(createUserDto: CreateUserDto) {
-        return await this.userRepository.insert(createUserDto);
+        const user = this.userRepository.create(createUserDto);
+        return this.userRepository.save(user);
     }
     
     findAll() {
         return this.userRepository.find();
+    }
+    
+    async findMe(userId: string) {
+        return this.userRepository.findOne({
+            where: {
+                id: userId,
+            },
+            relations: {
+                lastVisitDates: true,
+                friendships: true,
+                incomingFriendRequests: true,
+                outgoingFriendRequests: true,
+                chats: {
+                    channel: {
+                        chatMembers: {
+                            user: true,
+                        },
+                    },
+                },
+                serverMemberships: {
+                    server: {
+                        channels: true,
+                        members: {
+                            user: true,
+                        },
+                    },
+                },
+            },
+        });
     }
     
     findOne(options: FindOneOptions<User>) {

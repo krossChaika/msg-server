@@ -45,33 +45,4 @@ export class ServerMemberService {
     public async create(dto: CreateServerMemberDto) {
         return this.membersRepository.save(dto);
     }
-    
-    public async findAllByUserId(userId: string) {
-        return this.membersRepository.find({
-            where: {
-                userId: userId,
-            },
-            relations: {
-                user: {
-                    lastVisitDates: true,
-                    friendships: true,
-                    incomingFriendRequests: true,
-                    outgoingFriendRequests: true,
-                    chats: {
-                        channel: {
-                            chatMembers: {
-                                user: true,
-                            },
-                        },
-                    },
-                },
-                server: {
-                    channels: true,
-                    members: {
-                        user: true,
-                    },
-                },
-            },
-        });
-    }
 }

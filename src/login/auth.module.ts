@@ -5,6 +5,7 @@ import { UserCredentialsService } from '../user-credentials/user-credentials.ser
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserCredentials } from '../entities/user-credentials.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { UserModule } from '../user/user.module';
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { JwtModule } from '@nestjs/jwt';
                 expiresIn: '365d',
             },
         }),
+        UserModule,
     ],
     providers: [UserCredentialsService],
     controllers: [AuthController],

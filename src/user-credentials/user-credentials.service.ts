@@ -1,22 +1,27 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserCredentials } from '../entities/user-credentials.entity';
 import { Repository } from 'typeorm';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class UserCredentialsService {
     @InjectRepository(UserCredentials)
     private readonly credentialsRepository: Repository<UserCredentials>;
     
-    findOneById(id: string) {
-        return this.credentialsRepository.findOneBy({ id: id });
+    @Inject()
+    private readonly userService: UserService;
+    
+    create(dto: { password: string; userId: string }) {
+        const credentials = this.credentialsRepository.create(dto);
+        return this.credentialsRepository.save(credentials);
     }
     
-    findOneByPassword(password: string) {
-        return this.credentialsRepository.findOneBy({ password: password });
-    }
-    
-    findAllByPassword(password: string) {
-        return this.credentialsRepository.findBy({ password: password });
+    async findOneByUsername(name: string) {
+        const user = await this.userService.findOne({ where: { name } });
+        
+        if (!user) throw new NotFoundException();
+        
+        return this.credentialsRepository.findOneBy({ userId: user.id });
     }
 }
